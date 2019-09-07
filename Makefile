@@ -17,7 +17,7 @@ proto:
 
 .PHONY: dev
 dev:
-	go run . --registry consul --registry_address ${consul_ip}:${consul_port}
+	MICRO_REGISTRY_ADDRESS=${consul_ip}:${consul_port} go run . --registry consul
 
 .PHONY: test
 test:

@@ -1,22 +1,43 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/ghosv/env-test/handler"
 	envTest "github.com/ghosv/env-test/proto/envtest"
 	"github.com/ghosv/env-test/subscriber"
+	"github.com/kr/pretty"
 	"github.com/micro/go-log"
 
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/service/grpc"
+
+	"github.com/micro/go-micro/config"
+	consulConfig "github.com/micro/go-micro/config/source/consul"
 )
 
 const proName = "ghostv"
 const srvName = "env-test"
+const fullName = proName + ".srv." + srvName
 
 func main() {
+	consulAddr := os.Getenv("MICRO_REGISTRY_ADDRESS")
+	source := consulConfig.NewSource(
+		consulConfig.WithAddress(consulAddr),
+		consulConfig.WithPrefix("/demo"),
+		consulConfig.StripPrefix(true),
+	)
+	conf := config.NewConfig()
+	if err := conf.Load(source); err != nil {
+		fmt.Println(err)
+		return
+	}
+	pretty.Println(conf.Get("test"))
+
 	// New Service
 	service := grpc.NewService(
-		micro.Name(srvName),
+		micro.Name(fullName),
 		micro.Version("latest"),
 	)
 
@@ -27,9 +48,9 @@ func main() {
 	envTest.RegisterTestHandler(service.Server(), new(handler.Test))
 
 	// Register Struct as Subscriber
-	micro.RegisterSubscriber(proName+".srv."+srvName, service.Server(), new(subscriber.Test))
+	micro.RegisterSubscriber(fullName, service.Server(), new(subscriber.Test))
 	// Register Function as Subscriber
-	micro.RegisterSubscriber(proName+".srv."+srvName, service.Server(), subscriber.Handler)
+	micro.RegisterSubscriber(fullName, service.Server(), subscriber.Handler)
 
 	// Run service
 	if err := service.Run(); err != nil {
