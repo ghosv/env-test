@@ -6,8 +6,8 @@ import (
 	"github.com/ghosv/env-test/subscriber"
 	"github.com/micro/go-log"
 
-	// "github.com/micro/go-grpc" 这个没了
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/service/grpc"
 )
 
 const proName = "ghostv"
@@ -15,7 +15,7 @@ const srvName = "env-test"
 
 func main() {
 	// New Service
-	service := micro.NewService(
+	service := grpc.NewService(
 		micro.Name(srvName),
 		micro.Version("latest"),
 	)

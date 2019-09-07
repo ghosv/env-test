@@ -1,0 +1,14 @@
+✔ 服务发现 @done(19-09-07 21:15)
+☐ 配置中心测试
+☐ 消息队列测试
+☐ 熔断测试
+☐ 链路追踪测试
+☐ 监控测试
+☐ 日志测试
+☐ 数据库连接测试
+    ☐ MySQL
+    ☐ PostgreSQL
+    ☐ Mongo
+    ☐ Redis
+
+https://blog.csdn.net/liukuan73/article/details/78704395
