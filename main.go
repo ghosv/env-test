@@ -35,6 +35,20 @@ func main() {
 	}
 	pretty.Println(conf.Get("test"))
 
+	// watch the config for changes
+	watcher, err := conf.Watch()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Logf("Watching for changes ...")
+	for {
+		v, err := watcher.Next()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Logf("Watching for changes: %v", string(v.Bytes()))
+	}
+
 	// New Service
 	service := grpc.NewService(
 		micro.Name(fullName),
