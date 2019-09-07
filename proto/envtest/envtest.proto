@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package ghostv.srv.envtest;
+
+service Test {
+    rpc Env(Request) returns (Response) {}
+}
+
+message Request {
+    string id = 1;
+}
+
+message Response {
+    map<string, string> env = 1;
+}
+
+message Message {
+	string say = 1;
+}
